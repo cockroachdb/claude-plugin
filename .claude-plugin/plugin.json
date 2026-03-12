@@ -1,0 +1,24 @@
+{
+  "name": "cockroachdb",
+  "version": "0.1.0",
+  "description": "CockroachDB plugin for Claude Code — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters directly from your AI coding agent.",
+  "author": {
+    "name": "Virag Tripathi",
+    "email": "virag.tripathi@gmail.com",
+    "url": "https://github.com/viragtripathi"
+  },
+  "homepage": "https://github.com/cockroachdb/claude-plugin",
+  "repository": "https://github.com/cockroachdb/claude-plugin",
+  "license": "Apache-2.0",
+  "keywords": [
+    "cockroachdb",
+    "database",
+    "sql",
+    "distributed-sql",
+    "postgres-compatible",
+    "mcp",
+    "schema",
+    "migration",
+    "multi-region"
+  ]
+}

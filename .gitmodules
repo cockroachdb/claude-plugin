@@ -1,0 +1,3 @@
+[submodule "submodules/cockroachdb-skills"]
+	path = submodules/cockroachdb-skills
+	url = https://github.com/cockroachlabs/cockroachdb-skills.git

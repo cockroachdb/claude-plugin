@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "cockroachdb-toolbox": {
+      "command": "toolbox",
+      "args": ["--tools-file", "${CLAUDE_PLUGIN_ROOT}/tools.yaml", "--stdio"],
+      "env": {
+        "COCKROACHDB_HOST": "${COCKROACHDB_HOST}",
+        "COCKROACHDB_PORT": "${COCKROACHDB_PORT}",
+        "COCKROACHDB_USER": "${COCKROACHDB_USER}",
+        "COCKROACHDB_PASSWORD": "${COCKROACHDB_PASSWORD}",
+        "COCKROACHDB_DATABASE": "${COCKROACHDB_DATABASE}"
+      }
+    }
+  }
+}
