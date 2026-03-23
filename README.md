@@ -135,13 +135,15 @@ Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-g
 
 Skills are sourced from the [`cockroachdb-skills`](https://github.com/cockroachlabs/cockroachdb-skills) submodule via symlink — a single source of truth shared across CockroachDB agent integrations.
 
-### Agent
+### Agents
 
-| Agent              | Description                                                                          |
-|--------------------|--------------------------------------------------------------------------------------|
-| `cockroachdb-dba`  | CockroachDB DBA expert — performance tuning, schema review, cluster diagnostics      |
+| Agent                    | Description                                                                          |
+|--------------------------|--------------------------------------------------------------------------------------|
+| `cockroachdb-dba`        | CockroachDB DBA expert — performance tuning, schema review, cluster diagnostics      |
+| `cockroachdb-developer`  | Application developer expert — ORM config, retry logic, transaction patterns         |
+| `cockroachdb-operator`   | Operator/SRE expert — cluster operations, monitoring, backups, scaling, incidents    |
 
-Invoke via `/cockroachdb:cockroachdb-dba` or let Claude invoke it automatically when the task involves database administration.
+Invoke via `/cockroachdb:<agent-name>` or let Claude invoke automatically based on the task context.
 
 ### Hooks
 
