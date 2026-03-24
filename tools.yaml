@@ -1,11 +1,11 @@
 kind: sources
 name: crdb-source
 type: cockroachdb
-host: ${COCKROACHDB_HOST}
+host: "${COCKROACHDB_HOST:localhost}"
 port: "${COCKROACHDB_PORT:26257}"
-database: ${COCKROACHDB_DATABASE}
-user: ${COCKROACHDB_USER}
-password: ${COCKROACHDB_PASSWORD}
+database: "${COCKROACHDB_DATABASE:defaultdb}"
+user: "${COCKROACHDB_USER:root}"
+password: "${COCKROACHDB_PASSWORD:}"
 maxRetries: 5
 retryBaseDelay: 500ms
 readOnlyMode: true
@@ -13,7 +13,7 @@ enableWriteMode: false
 maxRowLimit: 1000
 queryTimeoutSec: 30
 queryParams:
-  sslmode: ${COCKROACHDB_SSLMODE:require}
+  sslmode: "${COCKROACHDB_SSLMODE:require}"
   application_name: cockroachdb-claude-plugin
 
 ---

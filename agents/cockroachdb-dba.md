@@ -1,7 +1,6 @@
 ---
 name: cockroachdb-dba
 description: CockroachDB database administration agent. Use when diagnosing performance issues, reviewing schema designs, analyzing query plans, troubleshooting cluster problems, or planning multi-region deployments. This agent has deep knowledge of CockroachDB distributed SQL internals.
-tools: Read, Grep, Glob, LS, Bash, WebFetch, TodoWrite
 model: sonnet
 color: green
 ---

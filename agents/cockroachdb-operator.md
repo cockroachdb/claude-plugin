@@ -1,7 +1,6 @@
 ---
 name: cockroachdb-operator
 description: CockroachDB operator and SRE agent. Use when managing cluster operations, monitoring, alerting, incident response, backup/restore, scaling, version upgrades, node maintenance, changefeed management, or troubleshooting performance and availability issues. Based on the official CockroachDB runbook template.
-tools: Read, Grep, Glob, LS, Bash, WebFetch, TodoWrite
 model: sonnet
 color: red
 ---

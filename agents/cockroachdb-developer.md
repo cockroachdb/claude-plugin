@@ -1,7 +1,6 @@
 ---
 name: cockroachdb-developer
 description: CockroachDB application developer agent. Use when building applications on CockroachDB, configuring ORMs/drivers, implementing transaction retry logic, optimizing queries, designing schemas for distributed SQL, or migrating from PostgreSQL/Oracle. Deep knowledge of JPA/Hibernate, Spring, JDBC, and multi-language driver patterns.
-tools: Read, Grep, Glob, LS, Bash, WebFetch, TodoWrite
 model: sonnet
 color: blue
 ---
