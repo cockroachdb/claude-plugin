@@ -7,13 +7,16 @@ The CockroachDB plugin for [Claude Code](https://code.claude.com/) gives your AI
 
 ## Installation
 
-From a marketplace:
+### From the CockroachDB marketplace
 
-```bash
-claude plugin install cockroachdb
+Add the marketplace and install the plugin:
+
+```
+/plugin marketplace add cockroachdb/claude-plugin
+/plugin install cockroachdb@cockroachdb-claude-plugin
 ```
 
-Or load locally during development:
+### Local development
 
 ```bash
 claude --plugin-dir /path/to/claude-plugin
@@ -21,7 +24,7 @@ claude --plugin-dir /path/to/claude-plugin
 
 ### Prerequisites
 
-This plugin connects to CockroachDB via MCP (Model Context Protocol). For the **MCP Toolbox** backend, install [MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox) (v0.27.0+):
+This plugin connects to CockroachDB via MCP (Model Context Protocol) using [MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox) (v0.27.0+):
 
 ```bash
 brew install mcp-toolbox
@@ -37,13 +40,14 @@ export COCKROACHDB_PORT="26257"
 export COCKROACHDB_USER="your-user"
 export COCKROACHDB_PASSWORD="your-password"
 export COCKROACHDB_DATABASE="your-database"
+export COCKROACHDB_SSLMODE="verify-full"
 ```
 
 For CockroachDB Cloud, find connection details in the [Cloud Console](https://cockroachlabs.cloud/).
 
 ### Alternative MCP Backends
 
-The plugin ships with the **MCP Toolbox** (stdio) backend. To use a different backend, replace the contents of `.mcp.json`:
+The plugin ships with the **MCP Toolbox** (stdio) backend active by default. To use a different backend, replace the contents of `.mcp.json`:
 
 <details>
 <summary><strong>MCP Toolbox via HTTP</strong> (remote/multi-user)</summary>
@@ -101,12 +105,12 @@ Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-g
 
 ### MCP Backends
 
-| Backend                    | Status         | Transport       | Use Case                                                                                                                          |
-|----------------------------|----------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `cockroachdb-toolbox`      | Available      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/genai-toolbox)                                            |
-| `cockroachdb-toolbox-http` | Available      | Streamable HTTP | Same as above, remote/multi-user via HTTP                                                                                         |
-| `ccloud`                   | Coming soon    | stdio           | Cluster lifecycle, backups, DR, networking via [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started) |
-| `cockroachdb-cloud`        | Coming soon    | HTTP            | CockroachDB Cloud MCP Server (OAuth/API key)                                                                                      |
+| Backend                    | Status      | Transport       | Use Case                                                                                                                          |
+|----------------------------|-------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `cockroachdb-toolbox`      | Active      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/genai-toolbox)                                            |
+| `cockroachdb-toolbox-http` | Available   | Streamable HTTP | Same as above, remote/multi-user via HTTP                                                                                         |
+| `ccloud`                   | Coming soon | stdio           | Cluster lifecycle, backups, DR, networking via [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started) |
+| `cockroachdb-cloud`        | Coming soon | HTTP            | CockroachDB Cloud MCP Server (OAuth/API key)                                                                                      |
 
 ### Tools
 
@@ -118,7 +122,7 @@ Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-g
 
 ### Skills
 
-22 skills from [cockroachdb-skills](https://github.com/cockroachlabs/cockroachdb-skills) across 10 operational domains:
+22 skills from [cockroachdb-skills](https://github.com/cockroachlabs/cockroachdb-skills) across multiple operational domains:
 
 | Domain                             | Skills | Examples                                                     |
 |------------------------------------|--------|--------------------------------------------------------------|
@@ -126,14 +130,8 @@ Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-g
 | **Observability & Diagnostics**    | 7      | profiling-statement-fingerprints, triaging-live-sql-activity |
 | **Security & Governance**          | 11     | auditing-cloud-cluster-security, hardening-user-privileges   |
 | **Onboarding & Migrations**        | 3      | molt-fetch, molt-verify, molt-replicator                     |
-| **Application Development**        | --     | (planned)                                                    |
-| **Performance & Scaling**          | --     | (planned)                                                    |
-| **Operations & Lifecycle**         | --     | (planned)                                                    |
-| **Cost & Usage Management**        | --     | (planned)                                                    |
-| **Integrations & Ecosystem**       | --     | (planned)                                                    |
-| **Resilience & Disaster Recovery** | --     | (planned)                                                    |
 
-Skills are sourced from the [`cockroachdb-skills`](https://github.com/cockroachlabs/cockroachdb-skills) submodule via symlink — a single source of truth shared across CockroachDB agent integrations.
+Skills are sourced from the [`cockroachdb-skills`](https://github.com/cockroachlabs/cockroachdb-skills) submodule via symlinks — a single source of truth shared across CockroachDB agent integrations.
 
 ### Agents
 
@@ -143,7 +141,7 @@ Skills are sourced from the [`cockroachdb-skills`](https://github.com/cockroachl
 | `cockroachdb-developer`  | Application developer expert — ORM config, retry logic, transaction patterns         |
 | `cockroachdb-operator`   | Operator/SRE expert — cluster operations, monitoring, backups, scaling, incidents    |
 
-Invoke via `/cockroachdb:<agent-name>` or let Claude invoke automatically based on the task context.
+Agents are auto-discovered from the `agents/` directory. Claude invokes them automatically based on task context, or you can reference them directly (e.g., "ask the cockroachdb-dba agent to review this schema").
 
 ### Hooks
 
@@ -152,7 +150,7 @@ Invoke via `/cockroachdb:<agent-name>` or let Claude invoke automatically based 
 | `validate-sql`    | Before SQL execution  | Blocks DROP DATABASE, TRUNCATE; warns on SERIAL, multi-DDL transactions              |
 | `check-sql-files` | After file Write/Edit | Scans SQL/code files for CockroachDB anti-patterns (SERIAL, SELECT *, missing retry) |
 
-Hooks are a Claude Code-specific feature that provides automated guardrails. They run as Python scripts (no external dependencies beyond Python 3) and can block dangerous operations or surface warnings to the agent.
+Hooks run as Python scripts (Python 3, no external dependencies) and provide automated safety guardrails.
 
 ## Development
 
@@ -169,18 +167,34 @@ Test locally:
 claude --plugin-dir .
 ```
 
+Validate the plugin:
+
+```bash
+claude plugin validate .
+```
+
 ### Project Structure
 
 ```
-.claude-plugin/plugin.json    # Plugin manifest
-.mcp.json                     # MCP server definitions
-tools.yaml                    # Toolbox source & tool configuration
-skills -> submodules/...      # Symlink to cockroachdb-skills (22 skills)
-agents/cockroachdb-dba.md     # DBA agent definition
-hooks/hooks.json              # Hook configuration
-scripts/                      # Hook scripts (Python 3, no external deps)
-submodules/cockroachdb-skills # Shared skills submodule
-assets/logo.svg               # Plugin logo
+.claude-plugin/
+  plugin.json                  # Plugin manifest (metadata only)
+  marketplace.json             # Marketplace catalog for distribution
+.mcp.json                      # MCP server configuration
+tools.yaml                     # Toolbox source & tool definitions
+agents/
+  cockroachdb-dba.md           # DBA agent
+  cockroachdb-developer.md     # Developer agent
+  cockroachdb-operator.md      # Operator agent
+hooks/
+  hooks.json                   # Hook configuration
+scripts/
+  validate-sql.py              # SQL validation hook
+  check-sql-files.py           # Anti-pattern linter hook
+skills/                        # 22 symlinks to cockroachdb-skills submodule
+submodules/
+  cockroachdb-skills/          # Shared skills submodule
+assets/
+  logo.svg                     # Plugin logo
 ```
 
 ## Releasing
@@ -196,6 +210,7 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 - [CockroachDB Documentation](https://www.cockroachlabs.com/docs/)
 - [CockroachDB Cloud Console](https://cockroachlabs.cloud/)
 - [Claude Code Plugin Docs](https://code.claude.com/docs/en/plugins)
+- [Plugin Marketplace Docs](https://code.claude.com/docs/en/plugin-marketplaces)
 - [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started)
 - [MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox)
 - [Report Issues](https://github.com/cockroachdb/claude-plugin/issues)
