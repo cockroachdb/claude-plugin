@@ -26,6 +26,7 @@ jobs:
         run: |
           tar -czvf cockroachdb-claude-plugin.tar.gz \
             .claude-plugin/plugin.json \
+            .claude-plugin/marketplace.json \
             .mcp.json \
             tools.yaml \
             skills/ \

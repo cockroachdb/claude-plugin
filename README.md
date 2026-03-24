@@ -122,16 +122,15 @@ Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-g
 
 ### Skills
 
-22 skills from [cockroachdb-skills](https://github.com/cockroachlabs/cockroachdb-skills) across multiple operational domains:
+Skills are sourced from the [`cockroachdb-skills`](https://github.com/cockroachlabs/cockroachdb-skills) submodule via symlinks — a single source of truth shared across CockroachDB agent integrations. A [weekly CI workflow](.github/workflows/update-skills.yml) auto-detects upstream changes and opens a PR to update.
 
-| Domain                             | Skills | Examples                                                     |
-|------------------------------------|--------|--------------------------------------------------------------|
-| **Query & Schema Design**          | 1      | cockroachdb-sql                                              |
-| **Observability & Diagnostics**    | 7      | profiling-statement-fingerprints, triaging-live-sql-activity |
-| **Security & Governance**          | 11     | auditing-cloud-cluster-security, hardening-user-privileges   |
-| **Onboarding & Migrations**        | 3      | molt-fetch, molt-verify, molt-replicator                     |
-
-Skills are sourced from the [`cockroachdb-skills`](https://github.com/cockroachlabs/cockroachdb-skills) submodule via symlinks — a single source of truth shared across CockroachDB agent integrations.
+| Domain                             | Examples                                                     |
+|------------------------------------|--------------------------------------------------------------|
+| **Query & Schema Design**          | cockroachdb-sql                                              |
+| **Observability & Diagnostics**    | profiling-statement-fingerprints, triaging-live-sql-activity |
+| **Security & Governance**          | auditing-cloud-cluster-security, hardening-user-privileges   |
+| **Onboarding & Migrations**        | molt-fetch, molt-verify, molt-replicator                     |
+| **Operations & Lifecycle**         | managing-cluster-capacity, upgrading-cluster-version         |
 
 ### Agents
 
@@ -177,7 +176,7 @@ claude plugin validate .
 
 ```
 .claude-plugin/
-  plugin.json                  # Plugin manifest (metadata only)
+  plugin.json                  # Plugin manifest with component declarations
   marketplace.json             # Marketplace catalog for distribution
 .mcp.json                      # MCP server configuration
 tools.yaml                     # Toolbox source & tool definitions
@@ -190,7 +189,7 @@ hooks/
 scripts/
   validate-sql.py              # SQL validation hook
   check-sql-files.py           # Anti-pattern linter hook
-skills/                        # 22 symlinks to cockroachdb-skills submodule
+skills/                        # Skills copied from cockroachdb-skills submodule
 submodules/
   cockroachdb-skills/          # Shared skills submodule
 assets/
