@@ -20,6 +20,5 @@
     "schema",
     "migration",
     "multi-region"
-  ],
-  "agents": "./agents/"
+  ]
 }
