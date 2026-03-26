@@ -1,6 +1,6 @@
 {
   "name": "cockroachdb",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "CockroachDB plugin for Claude Code — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters directly from your AI coding agent.",
   "author": {
     "name": "Virag Tripathi",
