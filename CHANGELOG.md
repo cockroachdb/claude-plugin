@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/cockroachdb/claude-plugin/compare/v0.1.2...v0.1.3) (2026-03-26)
+
+
+### Features
+
+* add Cloud MCP and ccloud CLI GA support across all backends and agents ([c222245](https://github.com/cockroachdb/claude-plugin/commit/c222245827582cd4146d2139a91398b3831e58b4))
+
 ## [0.1.2](https://github.com/cockroachdb/claude-plugin/compare/v0.1.1...v0.1.2) (2026-03-24)
 
 
