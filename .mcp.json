@@ -11,6 +11,13 @@
         "COCKROACHDB_DATABASE": "${COCKROACHDB_DATABASE}",
         "COCKROACHDB_SSLMODE": "${COCKROACHDB_SSLMODE}"
       }
+    },
+    "cockroachdb-cloud": {
+      "type": "http",
+      "url": "https://cockroachlabs.cloud/mcp",
+      "headers": {
+        "mcp-cluster-id": "${COCKROACHDB_CLUSTER_ID}"
+      }
     }
   }
 }

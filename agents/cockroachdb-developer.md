@@ -178,9 +178,18 @@ When bulk DML exceeds 250K-500K rows (or 1M+ without secondary indexes):
 
 ## Available MCP Tools
 
-When connected via MCP Toolbox, you have access to:
+**Via MCP Toolbox** (self-hosted, any cluster):
 - `cockroachdb-execute-sql`: Execute any SQL statement
 - `cockroachdb-list-schemas`: List database schemas
 - `cockroachdb-list-tables`: List tables with column details
+
+**Via CockroachDB Cloud MCP** (managed, CockroachDB Cloud clusters):
+- `list_databases`, `list_tables`, `get_table_schema`: Schema exploration
+- `select_query`, `explain_query`: Read queries and execution plans
+- `create_database`, `create_table`, `insert_rows`: Write operations (requires write consent)
+
+**Via ccloud CLI** (shell commands, `-o json` for structured output):
+- `ccloud cluster connection-string <name> --database <db> --sql-user <user>`: Programmatic connection strings
+- `ccloud cluster info <name>`: Cluster details for app configuration
 
 Use these tools to inspect schemas, test queries, validate retry behavior, and diagnose performance issues.

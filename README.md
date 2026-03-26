@@ -67,38 +67,94 @@ Run Toolbox in HTTP mode: `toolbox --tools-file tools.yaml --address 0.0.0.0:500
 </details>
 
 <details>
-<summary><strong>ccloud CLI</strong> (cluster lifecycle, backups, DR) — Coming soon</summary>
+<summary><strong>ccloud CLI</strong> (cluster lifecycle, backups, DR, networking)</summary>
 
+The [`ccloud` CLI](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-cli-database-automation/) is an agent-ready command-line tool for full cluster lifecycle management. AI agents call ccloud directly via shell commands (not MCP protocol) -- every command supports `-o json` for structured output.
+
+**Install:** `brew install cockroachdb/tap/ccloud`
+
+**Authenticate (interactive):** `ccloud auth login` (opens browser; supports SSO via OIDC/SAMLv2)
+
+**Authenticate (org-scoped):** `ccloud auth login --org {organization-label}`
+
+**Authenticate (headless/CI):** `ccloud auth login --no-redirect` or use a service account API key as a bearer token.
+
+**Example agent commands:**
+```bash
+# Provision
+ccloud cluster create serverless my-cluster us-east-1 --cloud AWS -o json
+ccloud cluster database create my-cluster myapp -o json
+
+# Connect
+ccloud cluster connection-string my-cluster --database myapp --sql-user maxroach -o json
+# Composable: pipe into jq + psql
+ccloud cluster connection-string my-cluster --database myapp --sql-user maxroach -o json \
+  | jq -r '.connection_url' | xargs -I{} psql {} -c "SELECT count(*) FROM users"
+
+# Operate
+ccloud cluster list -o json
+ccloud cluster info my-cluster -o json
+ccloud cluster backup config update my-cluster --frequency 60 --retention 60
+
+# Observe
+ccloud audit list --limit 10 -o json
+ccloud cluster versions -o json
+ccloud cluster cmek get my-cluster -o json
+
+# Scale & DR
+ccloud replication create --primary-cluster prod-east --standby-cluster dr-west
+ccloud cluster networking allowlist list <cluster-id> -o json
+
+# Organize
+ccloud folder create Production -o json
+ccloud folder contents <folder-id> -o json
+
+# Test resilience
+ccloud cluster disruption set my-cluster --region us-east-1 --whole-region
+```
+
+**Coverage:** Provision, Connect, Operate, Observe, Scale & DR, Organize, Test resilience. See the [ccloud reference](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-reference) for full command list.
+</details>
+
+<details>
+<summary><strong>CockroachDB Cloud MCP Server</strong> (OAuth/API key)</summary>
+
+The official [managed MCP server](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-managed-mcp-server/) is hosted by Cockroach Labs and requires no infrastructure setup. Authenticate via OAuth 2.1 (PKCE) or a service account API key. Read-only by default; write access requires explicit consent.
+
+**OAuth (recommended — opens browser for consent, scopes: `mcp:read`, `mcp:write`):**
 ```json
 {
   "mcpServers": {
-    "ccloud": {
-      "command": "ccloud",
-      "args": ["mcp"],
-      "env": {
-        "CCLOUD_API_KEY": "${CCLOUD_API_KEY}"
+    "cockroachdb-cloud": {
+      "type": "http",
+      "url": "https://cockroachlabs.cloud/mcp",
+      "headers": {
+        "mcp-cluster-id": "{your-cluster-id}"
       }
     }
   }
 }
 ```
 
-Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started).
-</details>
-
-<details>
-<summary><strong>CockroachDB Cloud MCP Server</strong> (OAuth/API key) — Coming soon</summary>
-
+**API Key (headless/autonomous agents):**
 ```json
 {
   "mcpServers": {
     "cockroachdb-cloud": {
       "type": "http",
-      "url": "https://mcp.cockroachlabs.cloud"
+      "url": "https://cockroachlabs.cloud/mcp",
+      "headers": {
+        "mcp-cluster-id": "{your-cluster-id}",
+        "Authorization": "Bearer {your-service-account-api-key}"
+      }
     }
   }
 }
 ```
+
+Or via CLI: `claude mcp add cockroachdb-cloud https://cockroachlabs.cloud/mcp --transport http --header "mcp-cluster-id: {your-cluster-id}"`
+
+See the [quickstart guide](https://www.cockroachlabs.com/docs/cockroachcloud/connect-to-the-cockroachdb-cloud-mcp-server) for detailed setup.
 </details>
 
 ## What's Included
@@ -108,17 +164,45 @@ Requires [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-g
 | Backend                    | Status      | Transport       | Use Case                                                                                                                          |
 |----------------------------|-------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | `cockroachdb-toolbox`      | Active      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/genai-toolbox)                                            |
-| `cockroachdb-toolbox-http` | Available   | Streamable HTTP | Same as above, remote/multi-user via HTTP                                                                                         |
-| `ccloud`                   | Coming soon | stdio           | Cluster lifecycle, backups, DR, networking via [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started) |
-| `cockroachdb-cloud`        | Coming soon | HTTP            | CockroachDB Cloud MCP Server (OAuth/API key)                                                                                      |
+| `cockroachdb-cloud`        | Active      | Streamable HTTP | [Managed MCP Server](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-managed-mcp-server/) — CockroachDB Cloud (OAuth/API key) |
+| `cockroachdb-toolbox-http` | Available   | Streamable HTTP | MCP Toolbox remote/multi-user via HTTP                                                                                            |
+
+### CLI Tools
+
+| Tool              | Status | Use Case                                                                                                                                           |
+|-------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `ccloud`          | Active | [Agent-ready CLI](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-cli-database-automation/) — cluster lifecycle, backups, DR, networking, audit. Agents call directly via shell. |
 
 ### Tools
+
+**MCP Toolbox** (self-hosted, any cluster):
 
 | Tool                       | Description                                      |
 |----------------------------|--------------------------------------------------|
 | `cockroachdb-execute-sql`  | Execute SQL statements (SELECT, DDL, DML)        |
 | `cockroachdb-list-schemas` | List all schemas in the database                 |
 | `cockroachdb-list-tables`  | List tables with columns, types, and constraints |
+
+**CockroachDB Cloud MCP** (managed, read tools):
+
+| Tool                    | Description                                 |
+|-------------------------|---------------------------------------------|
+| `list_clusters`         | List all accessible clusters                |
+| `get_cluster`           | Get detailed cluster information            |
+| `list_databases`        | List databases in the cluster               |
+| `list_tables`           | List tables in a database                   |
+| `get_table_schema`      | Get detailed schema for a table             |
+| `select_query`          | Execute a SELECT statement                  |
+| `explain_query`         | Execute an EXPLAIN statement                |
+| `show_running_queries`  | List currently executing queries            |
+
+**CockroachDB Cloud MCP** (managed, write tools — requires write consent):
+
+| Tool                    | Description                                 |
+|-------------------------|---------------------------------------------|
+| `create_database`       | Create a new database                       |
+| `create_table`          | Create a new table                          |
+| `insert_rows`           | Insert rows into a table                    |
 
 ### Skills
 
@@ -208,6 +292,9 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 
 - [CockroachDB Documentation](https://www.cockroachlabs.com/docs/)
 - [CockroachDB Cloud Console](https://cockroachlabs.cloud/)
+- [Managed MCP Server Blog Post](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-managed-mcp-server/)
+- [Cloud MCP Quickstart Guide](https://www.cockroachlabs.com/docs/cockroachcloud/connect-to-the-cockroachdb-cloud-mcp-server)
+- [ccloud CLI for AI Agents Blog Post](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-cli-database-automation/)
 - [Claude Code Plugin Docs](https://code.claude.com/docs/en/plugins)
 - [Plugin Marketplace Docs](https://code.claude.com/docs/en/plugin-marketplaces)
 - [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started)

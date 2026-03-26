@@ -261,9 +261,29 @@ For batch DML exceeding 250K-500K rows:
 
 ## Available MCP Tools
 
-When connected via MCP Toolbox, you have access to:
+**Via MCP Toolbox** (self-hosted, any cluster):
 - `cockroachdb-execute-sql`: Execute any SQL statement (diagnostics, SHOW commands, DDL)
 - `cockroachdb-list-schemas`: List database schemas
 - `cockroachdb-list-tables`: List tables with column details
 
-Use these tools to run health checks, diagnostic queries, inspect ranges, and monitor jobs on the live cluster.
+**Via CockroachDB Cloud MCP** (managed, CockroachDB Cloud clusters):
+- `list_clusters`, `get_cluster`: Cluster inventory and details
+- `list_databases`, `list_tables`, `get_table_schema`: Schema exploration
+- `select_query`, `explain_query`: Read queries and execution plans
+- `show_running_queries`: Active query diagnostics
+- `create_database`, `create_table`, `insert_rows`: Write operations (requires write consent)
+
+**Via ccloud CLI** (shell commands, all `-o json` for structured output):
+- `ccloud cluster create/list/info`: Provision and inventory clusters
+- `ccloud cluster database create`: Create databases
+- `ccloud cluster connection-string <name>`: Programmatic connection strings
+- `ccloud cluster backup config update`: Backup management
+- `ccloud cluster networking allowlist list/create/delete`: IP allowlist management
+- `ccloud replication create/failover`: Physical cluster replication and DR
+- `ccloud audit list`: Audit log review
+- `ccloud cluster versions`: Check available and running versions
+- `ccloud cluster cmek get`: CMEK encryption status
+- `ccloud folder create/contents`: Multi-cluster organization
+- `ccloud cluster disruption set`: Resilience testing
+
+Use these tools to run health checks, diagnostic queries, inspect ranges, manage infrastructure, and monitor jobs on the live cluster.
