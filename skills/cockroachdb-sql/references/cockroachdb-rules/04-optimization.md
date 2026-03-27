@@ -93,6 +93,11 @@ SELECT * FROM large_table;  -- ❌ Specify columns
 
 -- Large OFFSET pagination
 SELECT * FROM table LIMIT 20 OFFSET 10000;  -- ❌ Inefficient
+
+-- XA / Prepared Transactions (not fully supported)
+PREPARE TRANSACTION 'tx_id';  -- ❌ Can cause stuck transactions and row locks
+COMMIT PREPARED 'tx_id';      -- ❌ Not fully supported, undocumented
+ROLLBACK PREPARED 'tx_id';    -- ❌ Use outbox pattern for cross-DB writes instead
 ```
 
 ### DO Use These Instead
@@ -109,6 +114,20 @@ SELECT * FROM posts
 WHERE (created_at, id) < ($1, $2)
 ORDER BY created_at DESC, id DESC
 LIMIT 20;  -- ✅
+
+-- For cross-database consistency instead of XA/Prepared Transaction, use the Outbox pattern:
+--- 1. Write both the business data and an outbox event in one CockroachDB transaction
+BEGIN;
+  INSERT INTO orders (id, user_id, total) VALUES ($1, $2, $3);
+  INSERT INTO outbox_events (id, aggregate_id, event_type, payload)
+    VALUES (gen_random_uuid(), $1, 'order_created', $4::JSONB);
+COMMIT; --- ✅
+
+--- 2. Use a changefeed to deliver outbox events to the external system (e.g. Kafka → MongoDB)
+CREATE CHANGEFEED FOR TABLE outbox_events
+  INTO 'kafka://broker:9092'
+  WITH format = 'json', updated, resolved = '10s'; --- ✅
+
 ```
 
 ## Performance Best Practices
