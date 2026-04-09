@@ -7,13 +7,10 @@ The CockroachDB plugin for [Claude Code](https://code.claude.com/) gives your AI
 
 ## Installation
 
-### From the CockroachDB marketplace
-
-Add the marketplace and install the plugin:
+Install from the [Claude Marketplace](https://claude.com/plugins/cockroachdb), or in Claude Code run:
 
 ```
-/plugin marketplace add cockroachdb/claude-plugin
-/plugin install cockroachdb@cockroachdb-claude-plugin
+/install-plugin cockroachdb
 ```
 
 ### Local development
