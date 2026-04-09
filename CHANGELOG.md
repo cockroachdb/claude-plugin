@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/cockroachdb/claude-plugin/compare/v0.1.3...v0.1.4) (2026-04-09)
+
+
+### Bug Fixes
+
+* restructure skills to match upstream category hierarchy ([572e840](https://github.com/cockroachdb/claude-plugin/commit/572e840cd0f2adea6500d15f88d8d55e13b5c1a2))
+
 ## [0.1.3](https://github.com/cockroachdb/claude-plugin/compare/v0.1.2...v0.1.3) (2026-03-26)
 
 
