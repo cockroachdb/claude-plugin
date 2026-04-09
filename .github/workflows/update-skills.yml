@@ -48,37 +48,11 @@ jobs:
       - name: Sync skills from submodule
         if: steps.check.outputs.behind == 'true'
         run: |
-          # Build list of upstream skill names
-          upstream_skills=""
-          for skill_dir in submodules/cockroachdb-skills/skills/*/; do
-            for skill in "$skill_dir"*/; do
-              if [ -f "$skill/SKILL.md" ]; then
-                skill_name=$(basename "$skill")
-                upstream_skills="$upstream_skills $skill_name"
-
-                # Copy new or updated skills
-                if [ -d "skills/$skill_name" ]; then
-                  rm -rf "skills/$skill_name"
-                  cp -r "$skill" "skills/$skill_name"
-                  echo "Updated: $skill_name"
-                else
-                  cp -r "$skill" "skills/$skill_name"
-                  echo "Added: $skill_name"
-                fi
-              fi
-            done
-          done
-
-          # Remove skills that no longer exist upstream
-          for existing in skills/*/; do
-            existing_name=$(basename "$existing")
-            if ! echo "$upstream_skills" | grep -qw "$existing_name"; then
-              rm -rf "skills/$existing_name"
-              echo "Removed (no longer upstream): $existing_name"
-            fi
-          done
-
-          echo "Total skills: $(ls -d skills/*/ 2>/dev/null | wc -l | tr -d ' ')"
+          rm -rf skills
+          cp -rL submodules/cockroachdb-skills/skills skills
+          echo "Categories: $(find skills -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
+          echo "Skills: $(find skills -name 'SKILL.md' -type f | wc -l | tr -d ' ')"
+          find skills -name "SKILL.md" -type f | sort
 
       - name: Create Pull Request
         if: steps.check.outputs.behind == 'true'
