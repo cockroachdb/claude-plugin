@@ -54,6 +54,13 @@ jobs:
           echo "Skills: $(find skills -name 'SKILL.md' -type f | wc -l | tr -d ' ')"
           find skills -name "SKILL.md" -type f | sort
 
+      - name: Update plugin.json skills array
+        if: steps.check.outputs.behind == 'true'
+        run: |
+          SKILLS_JSON=$(find skills -name "SKILL.md" -type f | sed 's|/SKILL.md||' | sed 's|^|./|' | sort | jq -R . | jq -s .)
+          jq --argjson skills "$SKILLS_JSON" '.skills = $skills' .claude-plugin/plugin.json > /tmp/plugin.json
+          mv /tmp/plugin.json .claude-plugin/plugin.json
+
       - name: Create Pull Request
         if: steps.check.outputs.behind == 'true'
         uses: peter-evans/create-pull-request@v7
