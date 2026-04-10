@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/cockroachdb/claude-plugin/compare/v0.1.4...v0.1.5) (2026-04-10)
+
+
+### Bug Fixes
+
+* add explicit skills paths to plugin.json for marketplace discovery ([e427948](https://github.com/cockroachdb/claude-plugin/commit/e4279485261053ef9839e578cc0d81b74943e11f))
+
 ## [0.1.4](https://github.com/cockroachdb/claude-plugin/compare/v0.1.3...v0.1.4) (2026-04-09)
 
 
