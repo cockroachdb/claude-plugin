@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/cockroachdb/claude-plugin/compare/v0.1.5...v0.1.6) (2026-04-21)
+
+
+### Bug Fixes
+
+* update author to Cockroach Labs for marketplace consistency ([ef2d8b3](https://github.com/cockroachdb/claude-plugin/commit/ef2d8b370e4d844e640700a552ec3287e1e479cf))
+
 ## [0.1.5](https://github.com/cockroachdb/claude-plugin/compare/v0.1.4...v0.1.5) (2026-04-10)
 
 
