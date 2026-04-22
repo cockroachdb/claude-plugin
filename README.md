@@ -21,7 +21,7 @@ claude --plugin-dir /path/to/claude-plugin
 
 ### Prerequisites
 
-This plugin connects to CockroachDB via MCP (Model Context Protocol) using [MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox) (v0.27.0+):
+This plugin connects to CockroachDB via MCP (Model Context Protocol) using [MCP Toolbox for Databases](https://github.com/googleapis/mcp-toolbox) (v1.0.0+):
 
 ```bash
 brew install mcp-toolbox
@@ -60,9 +60,9 @@ The plugin ships with the **MCP Toolbox** (stdio) backend active by default. To 
 }
 ```
 
-Run Toolbox in HTTP mode: `toolbox --tools-file tools.yaml --address 0.0.0.0 --port 5000`
+Run Toolbox in HTTP mode: `toolbox --config tools.yaml --address 0.0.0.0 --port 5000`
 
-Run Toolbox with the built-in web UI: `toolbox --tools-file tools.yaml --ui --port 5000` (opens at `http://127.0.0.1:5000/ui`)
+Run Toolbox with the built-in web UI: `toolbox --config tools.yaml --ui --port 5000` (opens at `http://127.0.0.1:5000/ui`)
 
 > **Note:** Toolbox must successfully connect to CockroachDB on startup. If the database is unreachable (wrong host/port, env vars not set), the server will hang during initialization and the UI will be stuck on "Fetching tools...". Make sure your `COCKROACHDB_*` environment variables are set and the database is accessible before starting.
 </details>
@@ -164,7 +164,7 @@ See the [quickstart guide](https://www.cockroachlabs.com/docs/cockroachcloud/con
 
 | Backend                    | Status      | Transport       | Use Case                                                                                                                          |
 |----------------------------|-------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `cockroachdb-toolbox`      | Active      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/genai-toolbox)                                            |
+| `cockroachdb-toolbox`      | Active      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/mcp-toolbox)                                            |
 | `cockroachdb-cloud`        | Active      | Streamable HTTP | [Managed MCP Server](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-managed-mcp-server/) — CockroachDB Cloud (OAuth/API key) |
 | `cockroachdb-toolbox-http` | Available   | Streamable HTTP | MCP Toolbox remote/multi-user via HTTP                                                                                            |
 
@@ -299,7 +299,7 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 - [Claude Code Plugin Docs](https://code.claude.com/docs/en/plugins)
 - [Plugin Marketplace Docs](https://code.claude.com/docs/en/plugin-marketplaces)
 - [ccloud CLI](https://www.cockroachlabs.com/docs/cockroachcloud/ccloud-get-started)
-- [MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox)
+- [MCP Toolbox for Databases](https://github.com/googleapis/mcp-toolbox)
 - [Report Issues](https://github.com/cockroachdb/claude-plugin/issues)
 
 ## License

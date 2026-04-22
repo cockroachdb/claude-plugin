@@ -1,52 +1,42 @@
-kind: sources
-name: crdb-source
-type: cockroachdb
-host: "${COCKROACHDB_HOST:localhost}"
-port: "${COCKROACHDB_PORT:26257}"
-database: "${COCKROACHDB_DATABASE:defaultdb}"
-user: "${COCKROACHDB_USER:root}"
-password: "${COCKROACHDB_PASSWORD:}"
-maxRetries: 5
-retryBaseDelay: 500ms
-readOnlyMode: true
-enableWriteMode: false
-maxRowLimit: 1000
-queryTimeoutSec: 30
-queryParams:
-  sslmode: "${COCKROACHDB_SSLMODE:require}"
-  application_name: cockroachdb-claude-plugin
+sources:
+  crdb-source:
+    type: cockroachdb
+    host: ${COCKROACHDB_HOST:localhost}
+    port: "${COCKROACHDB_PORT:26257}"
+    user: ${COCKROACHDB_USER:root}
+    password: ${COCKROACHDB_PASSWORD:}
+    database: ${COCKROACHDB_DATABASE:defaultdb}
+    maxRetries: 5
+    retryBaseDelay: 500ms
+    readOnlyMode: true
+    enableWriteMode: false
+    maxRowLimit: 1000
+    queryTimeoutSec: 30
+    queryParams:
+      sslmode: ${COCKROACHDB_SSLMODE:require}
+      application_name: cockroachdb-claude-plugin
 
----
+tools:
+  cockroachdb-execute-sql:
+    type: cockroachdb-execute-sql
+    source: crdb-source
+    description: |
+      Execute ad-hoc SQL statements against a CockroachDB database.
+      Use this for any SQL: SELECT queries, DDL statements (CREATE, ALTER, DROP),
+      and DML statements (INSERT, UPDATE, DELETE).
 
-kind: tools
-name: cockroachdb-execute-sql
-type: cockroachdb-execute-sql
-source: crdb-source
-description: |
-  Execute ad-hoc SQL statements against a CockroachDB database.
-  Use this for any SQL: SELECT queries, DDL statements (CREATE, ALTER, DROP),
-  and DML statements (INSERT, UPDATE, DELETE).
+  cockroachdb-list-schemas:
+    type: cockroachdb-list-schemas
+    source: crdb-source
+    description: |
+      List all schemas in the connected CockroachDB database.
+      Returns schema names and metadata. Use this as the first step
+      when exploring an unfamiliar database.
 
----
-
-kind: tools
-name: cockroachdb-list-schemas
-type: cockroachdb-list-schemas
-source: crdb-source
-description: |
-  List all schemas in the connected CockroachDB database.
-  Returns schema names and metadata. Use this as the first step
-  when exploring an unfamiliar database.
-
----
-
-kind: tools
-name: cockroachdb-list-tables
-type: cockroachdb-list-tables
-source: crdb-source
-description: |
-  List all tables in a CockroachDB database with detailed schema information
-  including column names, data types, constraints, and indexes.
-  Use this to understand table structure before writing queries.
-
-
+  cockroachdb-list-tables:
+    type: cockroachdb-list-tables
+    source: crdb-source
+    description: |
+      List all tables in a CockroachDB database with detailed schema information
+      including column names, data types, constraints, and indexes.
+      Use this to understand table structure before writing queries.
