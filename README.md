@@ -3,7 +3,7 @@
 [![Release Please](https://github.com/cockroachdb/claude-plugin/actions/workflows/release-please.yml/badge.svg)](https://github.com/cockroachdb/claude-plugin/actions/workflows/release-please.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-The CockroachDB plugin for [Claude Code](https://code.claude.com/) gives your AI coding agent direct access to CockroachDB databases — explore schemas, write optimized SQL, debug queries, and manage distributed clusters.
+Connect [Claude Code](https://code.claude.com/) directly to your CockroachDB clusters for hands-on database work — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters. This plugin provides tools across two active MCP backends (self-hosted MCP Toolbox and managed CockroachDB Cloud MCP Server), three specialized agents (DBA, Developer, Operator), skills across multiple operational domains, and built-in safety hooks.
 
 ## Installation
 
@@ -166,7 +166,7 @@ See the [quickstart guide](https://www.cockroachlabs.com/docs/cockroachcloud/con
 |----------------------------|-------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | `cockroachdb-toolbox`      | Active      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/mcp-toolbox)                                            |
 | `cockroachdb-cloud`        | Active      | Streamable HTTP | [Managed MCP Server](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-managed-mcp-server/) — CockroachDB Cloud (OAuth/API key) |
-| `cockroachdb-toolbox-http` | Available   | Streamable HTTP | MCP Toolbox remote/multi-user via HTTP                                                                                            |
+| `cockroachdb-toolbox-http` | Available   | SSE             | MCP Toolbox remote/multi-user via HTTP                                                                                            |
 
 ### CLI Tools
 

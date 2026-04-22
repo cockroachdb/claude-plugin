@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "cockroachdb",
-      "description": "CockroachDB plugin — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters directly from your AI coding agent.",
+      "description": "Connect Claude Code directly to your CockroachDB clusters for hands-on database work — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters. This plugin provides tools across two active MCP backends (self-hosted MCP Toolbox and managed CockroachDB Cloud MCP Server), three specialized agents (DBA, Developer, Operator), skills across multiple operational domains, and built-in safety hooks.",
       "source": "./"
     }
   ]

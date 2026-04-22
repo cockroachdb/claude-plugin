@@ -15,7 +15,7 @@
     "cockroachdb-toolbox-http": {
       "type": "http",
       "url": "http://127.0.0.1:5000/mcp",
-      "_comment": "Streamable HTTP transport — run 'toolbox --config tools.yaml' first, then connect via this URL"
+      "_comment": "SSE transport — run 'toolbox --config tools.yaml' first, then connect via this URL"
     },
     "cockroachdb-cloud": {
       "type": "http",
