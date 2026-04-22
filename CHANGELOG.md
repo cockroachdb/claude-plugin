@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/cockroachdb/claude-plugin/compare/v0.1.6...v0.1.7) (2026-04-22)
+
+
+### Bug Fixes
+
+* migrate toolbox config to v1.1.0 map-based format ([7270ff6](https://github.com/cockroachdb/claude-plugin/commit/7270ff641284a26e4a0a33f8d2ccd4bf247e6b7e))
+
 ## [0.1.6](https://github.com/cockroachdb/claude-plugin/compare/v0.1.5...v0.1.6) (2026-04-21)
 
 
