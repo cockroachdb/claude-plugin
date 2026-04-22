@@ -62,7 +62,9 @@ The plugin ships with the **MCP Toolbox** (stdio) backend active by default. To 
 
 Run Toolbox in HTTP mode: `toolbox --tools-file tools.yaml --address 0.0.0.0 --port 5000`
 
-> **Note:** Toolbox must successfully connect to CockroachDB on startup. If the database is unreachable (wrong host/port, env vars not set), the server will hang during initialization and the UI will be stuck on "fetching tools". Make sure your `COCKROACHDB_*` environment variables are set and the database is accessible before starting.
+Run Toolbox with the built-in web UI: `toolbox --tools-file tools.yaml --ui --port 5000` (opens at `http://127.0.0.1:5000/ui`)
+
+> **Note:** Toolbox must successfully connect to CockroachDB on startup. If the database is unreachable (wrong host/port, env vars not set), the server will hang during initialization and the UI will be stuck on "Fetching tools...". Make sure your `COCKROACHDB_*` environment variables are set and the database is accessible before starting.
 </details>
 
 <details>
