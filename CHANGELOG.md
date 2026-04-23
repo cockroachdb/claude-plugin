@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/cockroachdb/claude-plugin/compare/v0.1.7...v0.1.8) (2026-04-23)
+
+
+### Bug Fixes
+
+* quote CLAUDE_PLUGIN_ROOT in hooks.json for paths with spaces ([#11](https://github.com/cockroachdb/claude-plugin/issues/11)) ([582031c](https://github.com/cockroachdb/claude-plugin/commit/582031c5ee7adf3d8b4e7931cd9a3c92253a7359))
+
 ## [0.1.7](https://github.com/cockroachdb/claude-plugin/compare/v0.1.6...v0.1.7) (2026-04-22)
 
 
