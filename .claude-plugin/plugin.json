@@ -34,6 +34,7 @@
     "./skills/onboarding-and-migrations/molt-fetch",
     "./skills/onboarding-and-migrations/molt-replicator",
     "./skills/onboarding-and-migrations/molt-verify",
+    "./skills/onboarding-and-migrations/setting-up-local-cluster",
     "./skills/operations-and-lifecycle/managing-certificates-and-encryption",
     "./skills/operations-and-lifecycle/managing-cluster-capacity",
     "./skills/operations-and-lifecycle/managing-cluster-settings",
