@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/cockroachdb/claude-plugin/compare/v0.1.8...v0.1.9) (2026-05-03)
+
+
+### Features
+
+* add setup-cockroachdb.sh for local 3-node cluster provisioning ([7858cde](https://github.com/cockroachdb/claude-plugin/commit/7858cdee4e12151b87fdda2816c4c4502220e4d6))
+
 ## [0.1.8](https://github.com/cockroachdb/claude-plugin/compare/v0.1.7...v0.1.8) (2026-04-23)
 
 
