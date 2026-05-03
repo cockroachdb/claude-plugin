@@ -27,6 +27,20 @@ This plugin connects to CockroachDB via MCP (Model Context Protocol) using [MCP 
 brew install mcp-toolbox
 ```
 
+### Local Cluster (optional)
+
+Need a local CockroachDB to point the agent at? The repo ships a helper script that provisions a local multi-node insecure cluster on `localhost`:
+
+```bash
+./scripts/setup-cockroachdb.sh start     # start the cluster
+./scripts/setup-cockroachdb.sh status    # show running nodes
+./scripts/setup-cockroachdb.sh stop      # stop nodes (data preserved)
+./scripts/setup-cockroachdb.sh destroy   # stop and remove all data
+./scripts/setup-cockroachdb.sh --help    # all options (--nodes, --version, --port, ...)
+```
+
+The matching `setting-up-local-cluster` skill walks the agent through using it.
+
 ## Configuration
 
 Set environment variables for your CockroachDB connection:
@@ -272,8 +286,10 @@ agents/
 hooks/
   hooks.json                   # Hook configuration
 scripts/
+  setup-cockroachdb.sh         # Local multi-node cluster provisioning script
   validate-sql.py              # SQL validation hook
   check-sql-files.py           # Anti-pattern linter hook
+  validate-marketplace-install.sh  # Marketplace install verification
 skills/                        # Skills copied from cockroachdb-skills submodule
 submodules/
   cockroachdb-skills/          # Shared skills submodule
