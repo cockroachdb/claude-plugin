@@ -135,9 +135,9 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 - Hook scripts must be Python 3 with **no external dependencies** (stdlib only).
 - Read JSON from stdin, write JSON to stdout.
 - Exit code 0 = allow/continue; exit code 2 = block the tool call.
-- Always quote `${CLAUDE_PLUGIN_ROOT}` in `hooks.json` commands to handle paths with spaces:
+- Load hook scripts through the long-path-safe bootstrap below instead of passing the script path straight to `python3`. On Windows, `${CLAUDE_PLUGIN_ROOT}` resolves to a deeply nested cache path that can exceed the 260-character `MAX_PATH` limit; passing the path directly makes Python fail to open the script and error on every matched tool call (see issue #20). The bootstrap loads the script with `runpy`, prefixing the path with the `\\?\` long-path escape on Windows, keeps it inside single quotes so paths with spaces still work, and uses `; exit 0` so a failed bootstrap never disrupts editing:
   ```json
-  "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/your-script.py\""
+  "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/your-script.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0"
   ```
 
 ### MCP Configuration

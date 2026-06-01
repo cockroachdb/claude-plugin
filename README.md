@@ -3,7 +3,7 @@
 [![Release Please](https://github.com/cockroachdb/claude-plugin/actions/workflows/release-please.yml/badge.svg)](https://github.com/cockroachdb/claude-plugin/actions/workflows/release-please.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
-Connect [Claude Code](https://code.claude.com/) directly to your CockroachDB clusters for hands-on database work — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters. This plugin provides tools across two active MCP backends (self-hosted MCP Toolbox and managed CockroachDB Cloud MCP Server), three specialized agents (DBA, Developer, Operator), skills across multiple operational domains, and built-in safety hooks.
+Connect [Claude Code](https://code.claude.com/) directly to your CockroachDB clusters for hands-on database work — explore schemas, write optimized SQL, debug queries, and manage distributed database clusters. This plugin provides tools across MCP backends (self-hosted MCP Toolbox and managed CockroachDB Cloud MCP Server), specialized agents (DBA, Developer, Operator), skills across operational domains, and built-in safety hooks.
 
 ## Installation
 
@@ -235,6 +235,8 @@ Agents are auto-discovered from the `agents/` directory. Claude invokes them aut
 | `check-sql-files` | After file Write/Edit | Scans SQL/code files for CockroachDB anti-patterns (SERIAL, SELECT *, missing retry) |
 
 Hooks run as Python scripts (Python 3, no external dependencies) and provide automated safety guardrails.
+
+**Windows note:** the hooks invoke `python3`, so make sure a `python3` is on your `PATH`. The python.org installer creates `python.exe` and the `py` launcher but **not** `python3.exe`; on those installs the hooks safely no-op (they never block editing, but the safety checks won't run). Installing Python from the Microsoft Store — or adding a `python3` alias — enables them. You do **not** need to turn on Windows long-path support: the hooks load their scripts through the `\\?\` long-path prefix, so they work no matter how deep the plugin cache path is.
 
 ## Development
 
