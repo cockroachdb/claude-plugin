@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/validate-sql.py\"",
+            "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/validate-sql.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0",
             "timeout": 10
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/check-sql-files.py\"",
+            "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/check-sql-files.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0",
             "timeout": 15
           }
         ]
