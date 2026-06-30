@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/cockroachdb/claude-plugin/compare/v0.1.9...v0.1.10) (2026-06-30)
+
+
+### Bug Fixes
+
+* make hooks work on Windows by loading scripts long-path-safe ([#21](https://github.com/cockroachdb/claude-plugin/issues/21)) ([81f29eb](https://github.com/cockroachdb/claude-plugin/commit/81f29eb855cbce189b326b2f3724c8f7a8396205))
+
 ## [0.1.9](https://github.com/cockroachdb/claude-plugin/compare/v0.1.8...v0.1.9) (2026-05-03)
 
 
