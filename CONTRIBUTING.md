@@ -97,6 +97,11 @@ submodules/
    echo '{"tool_input":{"file_path":"test.sql"}}' | python3 scripts/check-sql-files.py
    ```
 
+   Run the full hook regression suite (also runs in CI):
+   ```bash
+   bash scripts/test-hooks.sh
+   ```
+
 5. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/):
    ```bash
    git commit -m "fix: quote CLAUDE_PLUGIN_ROOT for paths with spaces"
