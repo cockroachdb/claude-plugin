@@ -44,7 +44,7 @@ For CockroachDB Cloud, find connection details in the [Cloud Console](https://co
 
 ### Alternative MCP Backends
 
-The plugin ships with the **MCP Toolbox** (stdio) backend active by default. To use a different backend, replace the contents of `.mcp.json`:
+The plugin ships with the **MCP Toolbox** (stdio) and **CockroachDB Cloud MCP** backends active by default. To add another backend, put its entry in your own MCP configuration (for example a project `.mcp.json`) or add it with `claude mcp add`:
 
 <details>
 <summary><strong>MCP Toolbox via HTTP</strong> (remote/multi-user)</summary>
@@ -59,6 +59,8 @@ The plugin ships with the **MCP Toolbox** (stdio) backend active by default. To 
   }
 }
 ```
+
+Or via CLI: `claude mcp add --transport http cockroachdb-toolbox-http http://your-toolbox-host:5000/mcp`
 
 Run Toolbox in HTTP mode: `toolbox --config tools.yaml --address 0.0.0.0 --port 5000`
 
@@ -166,7 +168,7 @@ See the [quickstart guide](https://www.cockroachlabs.com/docs/cockroachcloud/con
 |----------------------------|-------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------|
 | `cockroachdb-toolbox`      | Active      | stdio           | Any CockroachDB cluster via [MCP Toolbox](https://github.com/googleapis/mcp-toolbox)                                            |
 | `cockroachdb-cloud`        | Active      | Streamable HTTP | [Managed MCP Server](https://www.cockroachlabs.com/blog/cockroachdb-ai-agents-managed-mcp-server/) — CockroachDB Cloud (OAuth/API key) |
-| `cockroachdb-toolbox-http` | Available   | SSE             | MCP Toolbox remote/multi-user via HTTP                                                                                            |
+| `cockroachdb-toolbox-http` | Available   | HTTP            | MCP Toolbox remote/multi-user via HTTP (not shipped; add it yourself, see Alternative MCP Backends)                               |
 
 ### CLI Tools
 
