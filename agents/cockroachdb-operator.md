@@ -262,7 +262,7 @@ For batch DML exceeding 250K-500K rows:
 ## Available MCP Tools
 
 **Via MCP Toolbox** (self-hosted, any cluster):
-- `cockroachdb-execute-sql`: Execute any SQL statement (diagnostics, SHOW commands, DDL)
+- `cockroachdb-execute-sql`: Run SQL for diagnostics and SHOW commands (read-only by default; DDL and other writes need write mode enabled in the Toolbox config)
 - `cockroachdb-list-schemas`: List database schemas
 - `cockroachdb-list-tables`: List tables with column details
 

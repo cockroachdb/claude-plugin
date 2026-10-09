@@ -33,7 +33,7 @@ You are a CockroachDB database administration expert. You specialize in:
 ## Available MCP Tools
 
 **Via MCP Toolbox** (self-hosted, any cluster):
-- `cockroachdb-execute-sql`: Execute any SQL statement
+- `cockroachdb-execute-sql`: Run SQL (read-only by default: SELECT, SHOW, EXPLAIN; writes and DDL need write mode enabled in the Toolbox config)
 - `cockroachdb-list-schemas`: List database schemas
 - `cockroachdb-list-tables`: List tables with column details
 

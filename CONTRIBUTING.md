@@ -47,7 +47,7 @@ claude plugin validate .
 .claude-plugin/
   plugin.json              # Plugin manifest (version managed by Release Please)
   marketplace.json         # Marketplace catalog entry
-.mcp.json                  # MCP server definitions (stdio, HTTP, Cloud)
+.mcp.json                  # MCP server definitions (Toolbox stdio, Cloud)
 tools.yaml                 # MCP Toolbox source and tool definitions
 agents/                    # Agent markdown files (auto-discovered)
 hooks/
@@ -139,16 +139,19 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 
 - Hook scripts must be Python 3 with **no external dependencies** (stdlib only).
 - Read JSON from stdin, write JSON to stdout.
-- Exit code 0 = allow/continue; exit code 2 = block the tool call.
-- Load hook scripts through the long-path-safe bootstrap below instead of passing the script path straight to `python3`. On Windows, `${CLAUDE_PLUGIN_ROOT}` resolves to a deeply nested cache path that can exceed the 260-character `MAX_PATH` limit; passing the path directly makes Python fail to open the script and error on every matched tool call (see issue #20). The bootstrap loads the script with `runpy`, prefixing the path with the `\\?\` long-path escape on Windows, keeps it inside single quotes so paths with spaces still work, and uses `; exit 0` so a failed bootstrap never disrupts editing:
+- Always exit 0. Signal a block with `hookSpecificOutput.permissionDecision: "deny"`, not with an exit code.
+- Tools from the plugin's own MCP servers are named `mcp__plugin_cockroachdb_<server>__<tool>`. A matcher that names only the bare `mcp__<server>__<tool>` form never fires for people who installed the plugin, so list the scoped name, and keep the bare name too when the hook should also cover a standalone server.
+- Load hook scripts through the bootstrap below instead of passing the script path straight to `python3`. Claude Code doesn't substitute `${CLAUDE_PLUGIN_ROOT}` inside a shell-form command; it exports `CLAUDE_PLUGIN_ROOT` and leaves the placeholder to the shell, which never expands it inside single quotes. The bootstrap uses the substituted path when a host provides one and otherwise reads the exported variable. On Windows the plugin root can exceed the 260-character `MAX_PATH` limit (issue #20), so the bootstrap prefixes the `\\?\` long-path escape, built with `chr(92)` so no escaping layer can change it. It exits quietly when it can't find the script (issue #23), and `; exit 0` keeps a failed bootstrap from disrupting editing:
   ```json
-  "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/your-script.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0"
+  "command": "python3 -c 'import os, runpy; r = r\"${CLAUDE_PLUGIN_ROOT}\"; r = r if r and not r.startswith(\"$\") else os.environ.get(\"CLAUDE_PLUGIN_ROOT\", \"\"); p = os.path.normpath(os.path.join(r, \"scripts\", \"your-script.py\")) if r else \"\"; p = chr(92) * 2 + \"?\" + chr(92) + p if p and os.name == \"nt\" else p; p and os.path.isfile(p) and runpy.run_path(p, run_name=\"__main__\")'; exit 0"
   ```
 
 ### MCP Configuration
 
-- `.mcp.json` defines MCP server backends.
-- Use `${ENV_VAR}` syntax for environment variable references.
+- `.mcp.json` defines the MCP servers the plugin ships.
+- Reference environment variables as `${VAR:-default}`, never as a bare `${VAR}`. Claude Code passes an unset bare reference through as the literal text `${VAR}`, which breaks the server (issue #27).
+- Toolbox uses a set-but-empty variable as an empty value rather than falling back to its default, so give each Toolbox connection setting a non-empty default that matches `tools.yaml`. Only `COCKROACHDB_PASSWORD` defaults to empty.
+- An optional header uses an empty default, as in `${COCKROACHDB_CLUSTER_ID:-}`. The Cloud MCP server treats an empty `mcp-cluster-id` header as absent.
 - The `tools.yaml` file uses Toolbox v1.1.0 map-based format with `${VAR:default}` syntax for defaults.
 
 ### Skills
