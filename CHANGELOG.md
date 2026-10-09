@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/cockroachdb/claude-plugin/compare/v0.1.10...v0.1.11) (2026-10-09)
+
+
+### Bug Fixes
+
+* make the bundled MCP servers and SQL safety hooks work out of the box ([#28](https://github.com/cockroachdb/claude-plugin/issues/28)) ([75853b7](https://github.com/cockroachdb/claude-plugin/commit/75853b7360bb829a85c7120d3da3632be73d6cdf))
+
 ## [0.1.10](https://github.com/cockroachdb/claude-plugin/compare/v0.1.9...v0.1.10) (2026-06-30)
 
 
