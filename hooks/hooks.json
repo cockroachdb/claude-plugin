@@ -2,11 +2,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "mcp__cockroachdb-toolbox__cockroachdb-execute-sql",
+        "matcher": "mcp__plugin_cockroachdb_cockroachdb-toolbox__cockroachdb-execute-sql|mcp__cockroachdb-toolbox__cockroachdb-execute-sql",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/validate-sql.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0",
+            "command": "python3 -c 'import os, runpy; r = r\"${CLAUDE_PLUGIN_ROOT}\"; r = r if r and not r.startswith(\"$\") else os.environ.get(\"CLAUDE_PLUGIN_ROOT\", \"\"); p = os.path.normpath(os.path.join(r, \"scripts\", \"validate-sql.py\")) if r else \"\"; p = chr(92) * 2 + \"?\" + chr(92) + p if p and os.name == \"nt\" else p; p and os.path.isfile(p) and runpy.run_path(p, run_name=\"__main__\")'; exit 0",
             "timeout": 10
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/check-sql-files.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0",
+            "command": "python3 -c 'import os, runpy; r = r\"${CLAUDE_PLUGIN_ROOT}\"; r = r if r and not r.startswith(\"$\") else os.environ.get(\"CLAUDE_PLUGIN_ROOT\", \"\"); p = os.path.normpath(os.path.join(r, \"scripts\", \"check-sql-files.py\")) if r else \"\"; p = chr(92) * 2 + \"?\" + chr(92) + p if p and os.name == \"nt\" else p; p and os.path.isfile(p) and runpy.run_path(p, run_name=\"__main__\")'; exit 0",
             "timeout": 15
           }
         ]

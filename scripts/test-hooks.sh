@@ -27,11 +27,17 @@ hook_cmd() { # $1=event  $2=root
 }
 
 # check: desc, event, root, stdin, expected_rc, mode(empty|contains), substr
+# The command runs with CLAUDE_PLUGIN_ROOT unset unless ENV_ROOT is set, in
+# which case it is exported the way Claude Code exports it to hook processes.
 check() {
   local desc="$1" event="$2" root="$3" stdin="$4" want_rc="$5" mode="$6" substr="${7:-}"
   local cmd out rc ok=1
   cmd="$(hook_cmd "$event" "$root")"
-  out="$(printf '%s' "$stdin" | sh -c "$cmd" 2>/dev/null)"; rc=$?
+  if [ -n "${ENV_ROOT:-}" ]; then
+    out="$(printf '%s' "$stdin" | CLAUDE_PLUGIN_ROOT="$ENV_ROOT" sh -c "$cmd" 2>/dev/null)"; rc=$?
+  else
+    out="$(printf '%s' "$stdin" | env -u CLAUDE_PLUGIN_ROOT sh -c "$cmd" 2>/dev/null)"; rc=$?
+  fi
   [ "$rc" = "$want_rc" ] || ok=0
   case "$mode" in
     empty)    [ -z "$out" ] || ok=0 ;;
@@ -63,6 +69,18 @@ check "non-SQL edit produces no block"  PostToolUse "$ROOT" "{\"tool_input\":{\"
 # reproducing a host that does not expand ${CLAUDE_PLUGIN_ROOT}.
 check "PreToolUse fails open on unsubstituted root"  PreToolUse  '${CLAUDE_PLUGIN_ROOT}' '{"tool_input":{"sql":"DROP DATABASE x"}}'                0 empty
 check "PostToolUse fails open on unsubstituted root" PostToolUse '${CLAUDE_PLUGIN_ROOT}' "{\"tool_input\":{\"file_path\":\"$TMP/a.sql\"}}"        0 empty
+
+# --- regression: placeholder left for the shell, root exported (current Claude Code) ---
+# Claude Code no longer substitutes ${CLAUDE_PLUGIN_ROOT} inside a shell-form
+# command. It exports CLAUDE_PLUGIN_ROOT and lets the shell expand the
+# placeholder, which never happens inside the single-quoted bootstrap. In a
+# PowerShell shell it rewrites the placeholder to ${env:CLAUDE_PLUGIN_ROOT},
+# which single quotes also leave unexpanded. The bootstrap must read the
+# exported variable in both cases.
+ENV_ROOT="$ROOT" check "PreToolUse uses the exported root when the placeholder is not substituted"  PreToolUse  '${CLAUDE_PLUGIN_ROOT}'     '{"tool_input":{"sql":"DROP DATABASE x"}}'         0 contains '"permissionDecision": "deny"'
+ENV_ROOT="$ROOT" check "PostToolUse uses the exported root when the placeholder is not substituted" PostToolUse '${CLAUDE_PLUGIN_ROOT}'     "{\"tool_input\":{\"file_path\":\"$TMP/a.sql\"}}" 0 contains 'CockroachDB lint'
+ENV_ROOT="$ROOT" check "PreToolUse uses the exported root when the placeholder is in PowerShell form" PreToolUse '${env:CLAUDE_PLUGIN_ROOT}' '{"tool_input":{"sql":"DROP DATABASE x"}}'         0 contains '"permissionDecision": "deny"'
+ENV_ROOT="$TMP/missing" check "PreToolUse fails open when the exported root has no script"           PreToolUse  '${CLAUDE_PLUGIN_ROOT}'     '{"tool_input":{"sql":"DROP DATABASE x"}}'         0 empty
 
 echo
 if [ "$fails" -eq 0 ]; then
