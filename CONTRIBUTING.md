@@ -47,7 +47,7 @@ claude plugin validate .
 .claude-plugin/
   plugin.json              # Plugin manifest (version managed by Release Please)
   marketplace.json         # Marketplace catalog entry
-.mcp.json                  # MCP server definitions (stdio, HTTP, Cloud)
+.mcp.json                  # MCP server definitions (Toolbox stdio, Cloud)
 tools.yaml                 # MCP Toolbox source and tool definitions
 agents/                    # Agent markdown files (auto-discovered)
 hooks/
@@ -139,7 +139,8 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 
 - Hook scripts must be Python 3 with **no external dependencies** (stdlib only).
 - Read JSON from stdin, write JSON to stdout.
-- Exit code 0 = allow/continue; exit code 2 = block the tool call.
+- Always exit 0. Signal a block with `hookSpecificOutput.permissionDecision: "deny"`, not with an exit code.
+- Tools from the plugin's own MCP servers are named `mcp__plugin_cockroachdb_<server>__<tool>`. A matcher that names only the bare `mcp__<server>__<tool>` form never fires for people who installed the plugin, so list the scoped name, and keep the bare name too when the hook should also cover a standalone server.
 - Load hook scripts through the long-path-safe bootstrap below instead of passing the script path straight to `python3`. On Windows, `${CLAUDE_PLUGIN_ROOT}` resolves to a deeply nested cache path that can exceed the 260-character `MAX_PATH` limit; passing the path directly makes Python fail to open the script and error on every matched tool call (see issue #20). The bootstrap loads the script with `runpy`, prefixing the path with the `\\?\` long-path escape on Windows, keeps it inside single quotes so paths with spaces still work, and uses `; exit 0` so a failed bootstrap never disrupts editing:
   ```json
   "command": "python3 -c 'import sys, os, runpy; p = os.path.normpath(r\"${CLAUDE_PLUGIN_ROOT}/scripts/your-script.py\"); p = (\"\\\\?\\\\\" + p) if os.name == \"nt\" else p; runpy.run_path(p, run_name=\"__main__\")'; exit 0"
@@ -147,8 +148,10 @@ This repo uses [Release Please](https://github.com/googleapis/release-please) fo
 
 ### MCP Configuration
 
-- `.mcp.json` defines MCP server backends.
-- Use `${ENV_VAR}` syntax for environment variable references.
+- `.mcp.json` defines the MCP servers the plugin ships.
+- Reference environment variables as `${VAR:-default}`, never as a bare `${VAR}`. Claude Code passes an unset bare reference through as the literal text `${VAR}`, which breaks the server (issue #27).
+- Toolbox uses a set-but-empty variable as an empty value rather than falling back to its default, so give each Toolbox connection setting a non-empty default that matches `tools.yaml`. Only `COCKROACHDB_PASSWORD` defaults to empty.
+- An optional header uses an empty default, as in `${COCKROACHDB_CLUSTER_ID:-}`. The Cloud MCP server treats an empty `mcp-cluster-id` header as absent.
 - The `tools.yaml` file uses Toolbox v1.1.0 map-based format with `${VAR:default}` syntax for defaults.
 
 ### Skills

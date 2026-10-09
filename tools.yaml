@@ -21,9 +21,11 @@ tools:
     type: cockroachdb-execute-sql
     source: crdb-source
     description: |
-      Execute ad-hoc SQL statements against a CockroachDB database.
-      Use this for any SQL: SELECT queries, DDL statements (CREATE, ALTER, DROP),
-      and DML statements (INSERT, UPDATE, DELETE).
+      Execute an ad-hoc SQL statement against a CockroachDB database.
+      The connection is read-only by default: SELECT, SHOW, and EXPLAIN work,
+      while writes and schema changes (INSERT, UPDATE, DELETE, CREATE, ALTER,
+      DROP) are rejected unless write mode is enabled in the Toolbox
+      configuration (enableWriteMode: true).
 
   cockroachdb-list-schemas:
     type: cockroachdb-list-schemas
